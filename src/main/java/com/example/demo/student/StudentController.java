@@ -13,33 +13,32 @@ public class StudentController {
     private final StudentService studentService;
 
 
-    @Autowired
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
     @GetMapping
     public List<Student> getStudents() {
-        return studentService.getStudents();
+        return studentService.getAllStudents();
     }
 
     @GetMapping(path = "{studentId}")
-    public Optional<Student> getStudentById(@PathVariable("studentId") Long id) {
-        return studentService.getStudentsById(id);
+    public Student getStudentById(@PathVariable("studentId") Integer id) {
+        return studentService.getStudentById(id);
     }
 
-    @PostMapping
-    public void addStudent(@RequestBody Student student) {
-        studentService.addNewStudent(student);
-    }
+//    @PostMapping
+//    public void addStudent(@RequestBody Student student) {
+//        studentService.addNewStudent(student);
+//    }
+//
+//    @DeleteMapping(path = "{studentId}")
+//    public void deleteStudent(@PathVariable("studentId") Long id) {
+//        studentService.deleteStudent(id);
+//    }
 
-    @DeleteMapping(path = "{studentId}")
-    public void deleteStudent(@PathVariable("studentId") Long id) {
-        studentService.deleteStudent(id);
-    }
-
-    @PutMapping(path = "{studentId}")
-    public void updateStudent(@PathVariable("studentId") Long id, @RequestParam(required = false) String name, @RequestParam(required = false) String email) {
-        studentService.updateStudent(id, name, email);
-    }
+//    @PutMapping(path = "{studentId}")
+//    public void updateStudent(@PathVariable("studentId") Long id, @RequestParam(required = false) String name, @RequestParam(required = false) String email) {
+//        studentService.updateStudent(id, name, email);
+//    }
 }

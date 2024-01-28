@@ -18,7 +18,7 @@ public class Student {
             generator = "student_sequence"
     )
 
-    private Long id;
+    private Integer id;
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
@@ -29,7 +29,8 @@ public class Student {
     private Integer age;
 
 
-    public Student(String name, String email, LocalDate dob) {
+    public Student(Integer id, String name, String email, LocalDate dob) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.dob = dob;
@@ -39,11 +40,11 @@ public class Student {
 
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
