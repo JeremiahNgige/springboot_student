@@ -9,4 +9,6 @@ public interface StudentDao {
     Optional<Student> selectStudentById(Integer Id);
 
     void insertStudent(Student student);
+
+    boolean existStudentWithEmail(String email);
 }

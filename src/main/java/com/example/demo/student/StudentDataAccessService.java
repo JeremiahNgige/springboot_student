@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Repository("list")
 public class StudentDataAccessService implements StudentDao {
 
     //db
@@ -17,8 +17,8 @@ public class StudentDataAccessService implements StudentDao {
     static {
         students = new ArrayList<>();
 
-        Student Mariam = new Student(1, "Mariam", "mariam@gmail.com", LocalDate.of(2020, Month.APRIL, 1));
-        Student Alex = new Student(2, "Alex", "alex@gmail.com", LocalDate.of(2000, Month.DECEMBER, 3));
+        Student Mariam = new Student("Mariam", "mariam@gmail.com", LocalDate.of(2020, Month.APRIL, 1));
+        Student Alex = new Student("Alex", "alex@gmail.com", LocalDate.of(2000, Month.DECEMBER, 3));
         students.add(Mariam);
         students.add(Alex);
     }
@@ -37,5 +37,10 @@ public class StudentDataAccessService implements StudentDao {
     @Override
     public void insertStudent(Student student) {
 
+    }
+
+    @Override
+    public boolean existStudentWithEmail(String email) {
+        return students.stream().anyMatch(c -> c.getEmail().equals(email));
     }
 }

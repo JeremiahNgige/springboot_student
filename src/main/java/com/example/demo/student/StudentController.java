@@ -27,10 +27,10 @@ public class StudentController {
         return studentService.getStudentById(id);
     }
 
-//    @PostMapping
-//    public void addStudent(@RequestBody Student student) {
-//        studentService.addNewStudent(student);
-//    }
+    @PostMapping
+    public void addStudent(@RequestBody StudentRegistrationRequest studentRegistrationRequest) {
+        studentService.addNewStudent(studentRegistrationRequest);
+    }
 //
 //    @DeleteMapping(path = "{studentId}")
 //    public void deleteStudent(@PathVariable("studentId") Long id) {

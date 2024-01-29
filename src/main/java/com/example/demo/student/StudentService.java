@@ -1,7 +1,9 @@
 package com.example.demo.student;
 
+import com.example.demo.exception.DuplicateResourceException;
 import com.example.demo.exception.ResourceNotFound;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +16,7 @@ public class StudentService {
     private final StudentDao studentDao;
 
 
-    public StudentService(StudentDao studentDao) {
+    public StudentService(@Qualifier("jpa") StudentDao studentDao) {
         this.studentDao = studentDao;
     }
 
@@ -29,12 +31,17 @@ public class StudentService {
     }
 
 
-    public void addNewStudent(Student student) {
-//        Optional<Student> studentOptional = studentRepository.finaStudentByEmail(student.getEmail());
-//        if (studentOptional.isPresent()) {
-//            throw new ResourceNotFound("email taken");
-//        }
-//        studentRepository.save(student);
+    public void addNewStudent(StudentRegistrationRequest studentRegistrationRequest) {
+        //check if email exists
+        if (studentDao.existStudentWithEmail(studentRegistrationRequest.email())) {
+            throw new DuplicateResourceException("Email taken");
+        }
+        // add student
+        Student student = new Student(
+                studentRegistrationRequest.name(),
+                studentRegistrationRequest.email(),
+                studentRegistrationRequest.dob());
+        studentDao.insertStudent(student);
     }
 
     public void deleteStudent(Long id) {
