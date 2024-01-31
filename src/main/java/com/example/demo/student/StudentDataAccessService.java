@@ -36,11 +36,29 @@ public class StudentDataAccessService implements StudentDao {
 
     @Override
     public void insertStudent(Student student) {
-
+        students.add(student);
     }
 
     @Override
     public boolean existStudentWithEmail(String email) {
         return students.stream().anyMatch(c -> c.getEmail().equals(email));
+    }
+
+    @Override
+    public boolean existsStudentWithId(Integer id) {
+        return students.stream().anyMatch(c -> c.getId().equals(id));
+    }
+
+    @Override
+    public void deleteStudentById(Integer studentId) {
+        students.stream()
+                .filter(c -> c.getId()
+                        .equals(studentId))
+                .findFirst().ifPresent(students::remove);
+    }
+
+    @Override
+    public void updateStudent(Student update) {
+        students.add(update);
     }
 }

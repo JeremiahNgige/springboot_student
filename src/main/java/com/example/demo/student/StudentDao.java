@@ -11,4 +11,9 @@ public interface StudentDao {
     void insertStudent(Student student);
 
     boolean existStudentWithEmail(String email);
+
+    boolean existsStudentWithId(Integer id);
+
+    void deleteStudentById(Integer studentId);
+    void updateStudent(Student update);
 }

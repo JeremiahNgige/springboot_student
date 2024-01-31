@@ -34,4 +34,19 @@ public class StudentJPADataService implements StudentDao {
     public boolean existStudentWithEmail(String email) {
         return studentRepository.existsStudentByEmail(email);
     }
+
+    @Override
+    public boolean existsStudentWithId(Integer id) {
+        return studentRepository.existsById(Long.valueOf(id));
+    }
+
+    @Override
+    public void deleteStudentById(Integer studentId) {
+        studentRepository.deleteById(Long.valueOf(studentId));
+    }
+
+    @Override
+    public void updateStudent(Student update) {
+        studentRepository.save(update);
+    }
 }

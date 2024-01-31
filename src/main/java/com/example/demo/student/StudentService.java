@@ -1,14 +1,12 @@
 package com.example.demo.student;
 
+import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.DuplicateResourceException;
 import com.example.demo.exception.ResourceNotFound;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -32,42 +30,59 @@ public class StudentService {
 
 
     public void addNewStudent(StudentRegistrationRequest studentRegistrationRequest) {
+
         //check if email exists
         if (studentDao.existStudentWithEmail(studentRegistrationRequest.email())) {
             throw new DuplicateResourceException("Email taken");
         }
+
         // add student
         Student student = new Student(
                 studentRegistrationRequest.name(),
                 studentRegistrationRequest.email(),
-                studentRegistrationRequest.dob());
+                studentRegistrationRequest.dob()
+        );
         studentDao.insertStudent(student);
     }
 
-    public void deleteStudent(Long id) {
-//        boolean exists = studentRepository.existsById(id);
-//        if (!exists) {
-//            throw new ResourceNotFound("student with" + id + " does not exits");
-//        }
-//        studentRepository.deleteById(id);
+    public void deleteStudent(Integer studentId) {
+        boolean exists = studentDao.existsStudentWithId(studentId);
+        if (!exists) {
+            throw new ResourceNotFound("student with" + studentId + " does not exits");
+        }
+        studentDao.deleteStudentById(studentId);
     }
 
-//    @Transactional
-//    public void updateStudent(Long id, String name, String email) {
-//        Student student = studentDao.findById(id).orElseThrow(() -> new ResourceNotFound(
-//                "student with id " + id + " does not exits"));
-//
-//        if (name != null && !name.isEmpty() && !Objects.equals(student.getName(), name)) {
-//            student.setName(name);
-//        }
-//
-//        if (email != null && !email.isEmpty() && !Objects.equals(student.getEmail(), email)) {
-//            Optional<Student> studentOptional = studentRepository.finaStudentByEmail(email);
-//            if (studentOptional.isPresent()) {
-//                throw new ResourceNotFound("email taken");
-//            }
-//            student.setEmail(email);
-//        }
-//    }
+    public void updateStudent(Integer id, StudentUpdateRequest studentUpdateRequest) {
+
+        Student student = getStudentById(id);
+        boolean changes = false;
+
+        if (studentUpdateRequest.name() != null
+                && !studentUpdateRequest.name().equals(student.getName())) {
+            student.setName(studentUpdateRequest.name());
+            changes = true;
+        }
+
+        if (studentUpdateRequest.age() != null
+                && !studentUpdateRequest.age().equals(student.getAge())) {
+            student.setAge(studentUpdateRequest.age());
+            changes = true;
+        }
+
+        if (studentUpdateRequest.email() != null
+                && !studentUpdateRequest.email().equals(student.getEmail())) {
+            if (studentDao.existStudentWithEmail(studentUpdateRequest.email())) {
+                throw new DuplicateResourceException("Email Already taken");
+            }
+            student.setEmail(studentUpdateRequest.email());
+            changes = true;
+        }
+
+        if (!changes) {
+            throw new BadRequestException("No Changes were found");
+        }
+        studentDao.updateStudent(student);
+    }
 
 }
